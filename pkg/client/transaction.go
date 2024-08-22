@@ -16,3 +16,17 @@ func (g *GrpcClient) GetTransactionSignWeight(tx *core.Transaction) (*api.Transa
 	}
 	return result, nil
 }
+
+// GetTransactionListFromPending Query transaction information in the pending pool
+func (g *GrpcClient) GetTransactionListFromPending() (*api.TransactionIdList, error) {
+	ctx, cancel := g.getContext()
+	defer cancel()
+	txs, err := g.Client.GetTransactionListFromPending(ctx, &api.EmptyMessage{})
+	return txs, err
+}
+
+func (g *GrpcClient) GetTransactionFromPending(txHash []byte) (*core.Transaction, error) {
+	ctx, cancel := g.getContext()
+	defer cancel()
+	return g.Client.GetTransactionFromPending(ctx, &api.BytesMessage{Value: txHash})
+}
